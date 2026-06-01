@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>The Last Keyword — On Display</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;1,9..40,400&family=Inter+Tight:wght@500;700;900&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="assets/brand/level-favicon.png" />
+  <style>
+    :root{
+      --font-display:"Inter Tight",sans-serif; --font-body:"DM Sans",sans-serif;
+      --blue:#86D5F4; --color-accent:#86D5F4;
+    }
+    *{box-sizing:border-box;}
+    html,body{margin:0; height:100%;}
+    body{background:#0A0A0A; color:#fff; overflow:hidden; -webkit-font-smoothing:antialiased; cursor:none; font-family:var(--font-body);}
+
+    .stage{position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6vh 6vw;
+      background:radial-gradient(120% 90% at 50% 38%, rgba(255,255,255,.06) 0%, rgba(255,255,255,0) 55%), #0A0A0A;}
+
+    /* faint brand line-motif, top-left, as a gallery watermark */
+    .watermark{position:fixed; top:30px; left:32px; width:128px; color:rgba(255,255,255,.12);}
+    .watermark rect{fill:currentColor;}
+
+    .status{position:fixed; top:28px; left:0; right:0; display:flex; justify-content:center; gap:14px; align-items:center;}
+    .pill{font-family:var(--font-body); font-weight:700; letter-spacing:.28em; text-transform:uppercase; font-size:.72rem; color:#0A0A0A; background:#fff; padding:7px 16px; border-radius:999px;}
+    .pill.collection{background:transparent; color:rgba(255,255,255,.6); border:1px solid rgba(255,255,255,.22);}
+    .accession{position:fixed; top:28px; right:32px; font-family:var(--font-body); font-size:.74rem; letter-spacing:.16em; color:rgba(255,255,255,.32);}
+
+    .artifact{max-width:92vw; transition:opacity .6s ease, transform .6s ease;}
+    .artifact.swap{opacity:0; transform:translateY(10px);}
+    .keyword{font-family:var(--font-display); font-weight:900; line-height:1.02; letter-spacing:-.025em; font-size:clamp(3rem,12vw,9.5rem); word-break:break-word; margin:0; text-wrap:balance;}
+    .quote{color:var(--blue); font-weight:700;}
+
+    .placard{margin-top:5vh; display:inline-block; border-top:1px solid rgba(255,255,255,.18); padding-top:22px; max-width:720px; position:relative;}
+    .placard::before{content:""; position:absolute; top:-2px; left:50%; transform:translateX(-50%); width:54px; height:3px; background:var(--blue); border-radius:99px;}
+    .placard .title{font-family:var(--font-display); font-weight:700; font-size:1.05rem; letter-spacing:.02em; margin:0 0 6px;}
+    .placard .caption{font-family:var(--font-body); font-style:italic; font-size:.95rem; color:rgba(255,255,255,.55); margin:0; line-height:1.5;}
+
+    .footer{position:fixed; bottom:26px; left:0; right:0; display:flex; align-items:center; justify-content:center; gap:18px;}
+    .footer .logo{height:18px; color:#fff; opacity:.9;}
+    .footer .logo svg{height:18px; width:auto;}
+    .footer .div{width:1px; height:16px; background:rgba(255,255,255,.2);}
+    .footer .tag{font-family:var(--font-display); font-weight:900; letter-spacing:-.01em; font-size:.95rem; color:rgba(255,255,255,.7);}
+
+    .progress{position:fixed; bottom:0; left:0; height:3px; width:0; background:var(--blue); transition:width .25s linear;}
+    .setup-warning{position:fixed; inset:auto 0 70px 0; text-align:center; font-family:var(--font-body); font-size:.85rem; color:#FFAA53; display:none;}
+  </style>
+</head>
+<body>
+  <span class="watermark"><svg class="linemark" viewBox="0 0 120 70" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect x="0" y="0" width="30" height="9" rx="4"/><rect x="38" y="0" width="82" height="9" rx="4"/><rect x="0" y="15" width="30" height="9" rx="4"/><rect x="38" y="15" width="50" height="9" rx="4"/><rect x="0" y="30" width="30" height="9" rx="4"/><rect x="0" y="45" width="30" height="9" rx="4"/><rect x="0" y="60" width="120" height="9" rx="4"/></svg></span>
+
+  <div class="stage">
+    <div class="status"><span class="pill" id="statusPill">From the collection</span></div>
+    <div class="accession" id="accession">No. 0001</div>
+    <div class="artifact" id="artifact">
+      <h1 class="keyword" id="keyword"><span class="quote">&ldquo;</span>weather near me<span class="quote">&rdquo;</span></h1>
+      <div class="placard">
+        <p class="title">The Last Keyword</p>
+        <p class="caption" id="caption">From the permanent collection. c. 2026.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="logo"><svg class="lvl-logo" viewBox="0 0 1088.59 200.05" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Level Agency"><path fill="currentColor" d="M910.08,200.05c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h169.97c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-169.97ZM699.41,200.05c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h169.97c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-169.97ZM479.93,200.05c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h124.56c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-124.56ZM216.92,200.05c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h169.97c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-169.97ZM8.54,200.05c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h169.97c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54H8.54ZM910.08,169.56c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h169.97c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-169.97ZM699.41,169.56c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h169.97c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-169.97ZM469.39,169.56c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h145.65c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-145.65ZM216.92,169.56c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h169.97c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-169.97ZM8.54,169.56c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h169.97c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54H8.54ZM910.08,139.06c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h89.95c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-89.95ZM699.41,139.06c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h89.95c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-89.95ZM459.3,139.06c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h165.81c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-165.81ZM216.92,139.06c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h89.95c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-89.95ZM8.54,139.06c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h89.95c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54H8.54ZM910.08,108.57c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h89.95c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-89.95ZM699.41,108.57c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h131.13c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-131.13ZM556.65,108.57c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h78.47c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-78.47ZM449.31,108.57c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h78.47c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-78.47ZM216.92,108.57c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h131.13c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-131.13ZM8.54,108.57c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h89.95c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54H8.54ZM910.08,78.07c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h89.95c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-89.95ZM699.41,78.07c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h89.95c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-89.95ZM216.92,78.07c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h89.95c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-89.95ZM8.54,78.07c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h89.95c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54H8.54ZM566.86,78.07c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h78.47c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-78.47ZM439.09,78.07c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h78.47c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-78.47ZM910.08,47.57c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h89.95c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-89.95ZM576.8,47.57c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h78.47c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-78.47ZM429.15,47.57c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h78.47c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-78.47ZM8.54,47.57c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h89.95c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54H8.54ZM699.41,47.57c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h169.97c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-169.97ZM216.92,47.57c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h169.97c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-169.97ZM910.08,17.08c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h89.95c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-89.95ZM699.41,17.08c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h169.97c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-169.97ZM587.15,17.08c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h78.47c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-78.47ZM418.8,17.08c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h78.47c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-78.47ZM216.92,17.08c-4.71,0-8.54-3.83-8.54-8.54s3.83-8.54,8.54-8.54h169.97c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54h-169.97ZM8.54,17.08C3.83,17.08,0,13.25,0,8.54S3.83,0,8.54,0h89.95c4.71,0,8.54,3.83,8.54,8.54s-3.83,8.54-8.54,8.54H8.54Z"/></svg></span>
+    <span class="div"></span>
+    <span class="tag">GOOD ENOUGH ISN&rsquo;T</span>
+  </div>
+
+  <div class="progress" id="progress"></div>
+  <div class="setup-warning" id="setupWarning">Display is in preview mode. Add your Apps Script URL to config.js to go live.</div>
+
+  <script src="config.js"></script>
+  <script>
+  (function () {
+    var cfg = window.LK_CONFIG || {};
+    var FEATURE_MS = cfg.FEATURE_MS || 300000;
+    var ROTATE_MS  = cfg.ROTATE_MS  || 15000;
+    var POLL_MS    = cfg.POLL_MS    || 8000;
+    var SEEDS      = cfg.SEED_KEYWORDS || [];
+    var configured = cfg.SCRIPT_URL && cfg.SCRIPT_URL.indexOf("PASTE_") !== 0;
+    if (!configured) document.getElementById("setupWarning").style.display = "block";
+
+    var allEntries = [], lastSeenTime = 0, initialized = false;
+    var featuredEntry = null, featuredUntil = 0;
+    var queue = [], qIndex = 0, slotStartedAt = 0, currentKey = null, accessionCounter = 0;
+
+    function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+    var CAPTIONS=["From the permanent collection. c. 2026.","Mixed media: text, intent, dying SERP. c. 2026.","Artist unknown. Acquired in the age of the algorithm.","On loan from the open web. c. 2026.","Provenance: the query box. c. 2026."];
+    function seedCaption(word){ var h=0; for(var i=0;i<word.length;i++) h=(h*31+word.charCodeAt(i))>>>0; return CAPTIONS[h%CAPTIONS.length]; }
+    function donorCaption(e){ var who=(e.firstName||"").trim(); var co=(e.company||"").trim(); var donor=who?(who+(co?", "+co:"")):(co||"an anonymous practitioner"); return "Gift of "+donor+". Acquired 2026."; }
+    function buildQueue(){ var pool=[]; allEntries.forEach(function(e){ if(e.keyword) pool.push({keyword:e.keyword,caption:donorCaption(e),seed:false}); }); SEEDS.forEach(function(w){ pool.push({keyword:w,caption:seedCaption(w),seed:true}); }); queue=shuffle(pool); qIndex=0; }
+    function fitKeyword(el){ el.style.fontSize=""; var stage=el.closest(".stage"); var maxW=stage.clientWidth*0.9; var maxH=stage.clientHeight*0.55; var size=parseFloat(getComputedStyle(el).fontSize); var guard=0; while((el.scrollWidth>maxW||el.scrollHeight>maxH)&&size>28&&guard<80){ size*=0.94; el.style.fontSize=size+"px"; guard++; } }
+
+    var artifact=document.getElementById("artifact"), kwEl=document.getElementById("keyword"), capEl=document.getElementById("caption"), pill=document.getElementById("statusPill"), accEl=document.getElementById("accession");
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+    function render(item,mode){
+      var key=mode+"|"+item.keyword+"|"+item.caption; if(key===currentKey) return; currentKey=key;
+      artifact.classList.add("swap");
+      setTimeout(function(){
+        kwEl.innerHTML='<span class="quote">&ldquo;</span>'+escapeHtml(item.keyword)+'<span class="quote">&rdquo;</span>';
+        capEl.textContent=item.caption;
+        if(mode==="feature"){ pill.textContent="Now on display"; pill.className="pill"; }
+        else { pill.textContent="From the collection"; pill.className="pill collection"; }
+        accessionCounter++; accEl.textContent="No. "+String(1000+accessionCounter).slice(1);
+        fitKeyword(kwEl); artifact.classList.remove("swap");
+      },320);
+    }
+
+    var progress=document.getElementById("progress");
+    function tick(){
+      var now=Date.now();
+      if(featuredEntry && now<featuredUntil){
+        render({keyword:featuredEntry.keyword,caption:donorCaption(featuredEntry)},"feature");
+        progress.style.width=Math.min(100,(1-(featuredUntil-now)/FEATURE_MS)*100)+"%"; progress.style.background="var(--blue)"; return;
+      }
+      if(featuredEntry){ featuredEntry=null; buildQueue(); slotStartedAt=0; }
+      if(!queue.length) buildQueue();
+      if(!slotStartedAt || now-slotStartedAt>=ROTATE_MS){ slotStartedAt=now; qIndex++; if(qIndex>=queue.length) buildQueue(); }
+      var item=queue[qIndex]||queue[0]; if(item) render(item,"rotate");
+      progress.style.width=Math.min(100,((now-slotStartedAt)/ROTATE_MS)*100)+"%"; progress.style.background="rgba(255,255,255,.25)";
+    }
+
+    function fetchEntries(done){
+      if(!configured){ done(null); return; }
+      var name="lkcb_"+Date.now()+"_"+Math.floor(Math.random()*1e6); var script=document.createElement("script");
+      var to=setTimeout(function(){ cleanup(); done(null); },7000);
+      function cleanup(){ clearTimeout(to); try{ delete window[name]; }catch(e){ window[name]=undefined; } if(script.parentNode) script.parentNode.removeChild(script); }
+      window[name]=function(data){ cleanup(); done(data); }; script.onerror=function(){ cleanup(); done(null); };
+      var sep=cfg.SCRIPT_URL.indexOf("?")>-1?"&":"?"; script.src=cfg.SCRIPT_URL+sep+"callback="+name+"&t="+Date.now(); document.head.appendChild(script);
+    }
+    function toMs(ts){ var n=new Date(ts).getTime(); return isNaN(n)?0:n; }
+    function poll(){
+      fetchEntries(function(data){
+        if(data && Array.isArray(data.entries)){
+          allEntries=data.entries; var newest=0, newestEntry=null;
+          allEntries.forEach(function(e){ var t=toMs(e.timestamp); if(t>newest){ newest=t; newestEntry=e; } });
+          if(!initialized){ lastSeenTime=newest; initialized=true; buildQueue(); }
+          else if(newest>lastSeenTime && newestEntry){ lastSeenTime=newest; featuredEntry=newestEntry; featuredUntil=Date.now()+FEATURE_MS; }
+        } else if(!initialized){ initialized=true; buildQueue(); }
+        setTimeout(poll,POLL_MS);
+      });
+    }
+    buildQueue(); tick(); setInterval(tick,500); poll();
+    window.addEventListener("resize",function(){ fitKeyword(kwEl); });
+  })();
+  </script>
+</body>
+</html>
