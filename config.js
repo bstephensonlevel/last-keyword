@@ -11,7 +11,7 @@ window.LK_CONFIG = {
 
   // Public URL of the form, used in the LinkedIn share caption.
   // Update to your live booth URL (e.g. https://events.level.agency/last-keyword).
-  BOOTH_URL: "https://events.level.agency/last-keyword",
+  BOOTH_URL: "https://last-keyword.vercel.app/",
 
   // Pre-filled caption attendees can copy for LinkedIn.
   SHARE_CAPTION:
