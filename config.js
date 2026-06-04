@@ -7,11 +7,11 @@
 window.LK_CONFIG = {
   // Paste your Apps Script Web App URL here (ends in /exec).
   // See SETUP.md, Step 4.
-  SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwLxVaEtqN1u-4iV_A0lJqfm7ykXp-qPhF1c3_sFU00njOfbtXFLnd4_69qb9vE3Jx8/exec",
+  SCRIPT_URL: "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE",
 
   // Public URL of the form, used in the LinkedIn share caption.
   // Update to your live booth URL (e.g. https://events.level.agency/last-keyword).
-  BOOTH_URL: "https://last-keyword.vercel.app/",
+  BOOTH_URL: "https://events.level.agency/last-keyword",
 
   // Pre-filled caption attendees can copy for LinkedIn.
   SHARE_CAPTION:

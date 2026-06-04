@@ -125,29 +125,6 @@
       </p>
 
       <form id="lkForm" novalidate>
-        <div class="row-2">
-          <div class="form-group">
-            <label class="form-label" for="firstName">First name</label>
-            <input class="form-input" id="firstName" name="firstName" type="text" autocomplete="given-name" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="lastName">Last name</label>
-            <input class="form-input" id="lastName" name="lastName" type="text" autocomplete="family-name" required />
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="title">Title</label>
-          <input class="form-input" id="title" name="title" type="text" autocomplete="organization-title" required />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="company">Company</label>
-          <input class="form-input" id="company" name="company" type="text" autocomplete="organization" required />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="email">Email</label>
-          <input class="form-input" id="email" name="email" type="email" inputmode="email" autocomplete="email" required />
-        </div>
-
         <div class="keyword-block">
           <span class="tab">The artifact</span>
           <label class="form-label" for="keyword">Your last keyword</label>
@@ -160,7 +137,7 @@
           <label>Leave this empty<input type="text" id="website" name="website" tabindex="-1" autocomplete="off" /></label>
         </div>
 
-        <p class="err" id="formErr">Please complete every field with a valid email.</p>
+        <p class="err" id="formErr">Please enter a keyword.</p>
         <button type="submit" class="btn btn-primary btn-submit" id="submitBtn">Place it in the case</button>
       </form>
     </section>
@@ -211,8 +188,8 @@
       form.addEventListener("submit", function(e){
         e.preventDefault(); err.classList.remove("show");
         if (val("website")){ showSuccess(val("keyword")||"keyword"); return; }
-        var data={firstName:val("firstName"),lastName:val("lastName"),title:val("title"),company:val("company"),email:val("email"),keyword:val("keyword")};
-        if(!data.firstName||!data.lastName||!data.title||!data.company||!data.keyword||!emailOk(data.email)){ err.classList.add("show"); return; }
+        var data={keyword:val("keyword")};
+        if(!data.keyword){ err.classList.add("show"); return; }
         btn.disabled=true; btn.textContent="Placing it...";
         var body=new URLSearchParams(data);
         var done=false; var finish=function(){ if(!done){ done=true; showSuccess(data.keyword); } };

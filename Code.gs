@@ -16,7 +16,7 @@
  */
 
 var SHEET_NAME = 'Submissions';
-var HEADERS = ['Timestamp', 'First Name', 'Last Name', 'Title', 'Company', 'Email', 'Keyword'];
+var HEADERS = ['Timestamp', 'Keyword'];
 
 function getSheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -43,11 +43,6 @@ function doPost(e) {
     var sheet = getSheet_();
     sheet.appendRow([
       new Date(),
-      (p.firstName || '').toString().slice(0, 120),
-      (p.lastName || '').toString().slice(0, 120),
-      (p.title || '').toString().slice(0, 200),
-      (p.company || '').toString().slice(0, 200),
-      (p.email || '').toString().slice(0, 200),
       (p.keyword || '').toString().slice(0, 120)
     ]);
     return json_({ ok: true });
@@ -65,22 +60,15 @@ function doGet(e) {
     var lastRow = sheet.getLastRow();
     var entries = [];
     if (lastRow > 1) {
-      // columns: A Timestamp, B First, C Last, D Title, E Company, F Email, G Keyword
-      var values = sheet.getRange(2, 1, lastRow - 1, 7).getValues();
+      // columns: A Timestamp, B Keyword
+      var values = sheet.getRange(2, 1, lastRow - 1, 2).getValues();
       for (var i = 0; i < values.length; i++) {
         var row = values[i];
-        var kw = (row[6] || '').toString().trim();
+        var kw = (row[1] || '').toString().trim();
         if (!kw) continue;
         var ts = row[0];
         var iso = (ts instanceof Date) ? ts.toISOString() : new Date(ts).toISOString();
-        entries.push({
-          timestamp: iso,
-          firstName: (row[1] || '').toString(),
-          // last name / title kept server-side; not needed by the display
-          company: (row[4] || '').toString(),
-          keyword: kw
-          // NOTE: email is intentionally NOT exposed to the public display.
-        });
+        entries.push({ timestamp: iso, keyword: kw });
       }
     }
     payload = { ok: true, entries: entries };

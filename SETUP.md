@@ -12,9 +12,9 @@ SMX Advanced 2026 booth activation. Three moving parts:
 
 ## How the experience flows
 
-1. Attendee scans the QR code, lands on the form, fills in their details plus their "last keyword."
+1. Attendee scans the QR code, lands on the form, and enters their "last keyword."
 2. On submit, the row is written to your Google Sheet.
-3. The tablet display polls the sheet every few seconds. When a new keyword arrives, it **spotlights that keyword for 5 minutes** ("Now on display"), with a museum-style "Gift of [name], [company]" credit so the attendee can photograph their moment.
+3. The tablet display polls the sheet every few seconds. When a new keyword arrives, it **spotlights that keyword for 5 minutes** ("Now on display") so the attendee can photograph their moment.
 4. After the 5 minutes (or whenever nothing new has come in), the display **rotates through every submitted keyword in random order, ~15 seconds each**, mixed with a set of curated "historic" keywords so the case is never empty between submissions.
 5. If a newer keyword is submitted while one is being featured, the newest takes the spotlight and the 5-minute timer resets.
 
@@ -85,8 +85,7 @@ Generate the QR code from the form URL and drop it on the booth side panel.
 
 ## Good to know
 
-- **Privacy:** the display reads names, company, and keyword. Email is captured in the sheet but **never** sent to the public screen.
-- **Leads:** everything (including email) lands in the `Submissions` tab, ready to export or pipe into HubSpot for follow-up nurture.
+- **What's captured:** just the keyword and a timestamp. No names, email, or company are collected, so there's no personal data to manage. Every keyword lands in the `Submissions` tab.
 - **LinkedIn caption:** LinkedIn no longer lets us pre-fill post text from a share link, so the "Share on LinkedIn" button opens the share dialog with the booth URL and copies the caption to the attendee's clipboard to paste. The "Copy caption" button does the same on its own.
 - **Logo:** the form uses Level's logo on white; the display uses a white version on the dark gallery background. Both are in `/assets/brand`.
 - **Reuse:** for the next conference, change the hashtag in `SHARE_CAPTION`, swap the seed keywords, point `BOOTH_URL` at the new path, and reuse the same sheet or start a fresh one.

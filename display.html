@@ -89,8 +89,8 @@
     function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
     var CAPTIONS=["From the permanent collection. c. 2026.","Mixed media: text, intent, dying SERP. c. 2026.","Artist unknown. Acquired in the age of the algorithm.","On loan from the open web. c. 2026.","Provenance: the query box. c. 2026."];
     function seedCaption(word){ var h=0; for(var i=0;i<word.length;i++) h=(h*31+word.charCodeAt(i))>>>0; return CAPTIONS[h%CAPTIONS.length]; }
-    function donorCaption(e){ var who=(e.firstName||"").trim(); var co=(e.company||"").trim(); var donor=who?(who+(co?", "+co:"")):(co||"an anonymous practitioner"); return "Gift of "+donor+". Acquired 2026."; }
-    function buildQueue(){ var pool=[]; allEntries.forEach(function(e){ if(e.keyword) pool.push({keyword:e.keyword,caption:donorCaption(e),seed:false}); }); SEEDS.forEach(function(w){ pool.push({keyword:w,caption:seedCaption(w),seed:true}); }); queue=shuffle(pool); qIndex=0; }
+    var FRESH_CAPTION = "Acquired moments ago. c. 2026.";
+    function buildQueue(){ var pool=[]; allEntries.forEach(function(e){ if(e.keyword) pool.push({keyword:e.keyword,caption:seedCaption(e.keyword)}); }); SEEDS.forEach(function(w){ pool.push({keyword:w,caption:seedCaption(w)}); }); queue=shuffle(pool); qIndex=0; }
     function fitKeyword(el){ el.style.fontSize=""; var stage=el.closest(".stage"); var maxW=stage.clientWidth*0.9; var maxH=stage.clientHeight*0.55; var size=parseFloat(getComputedStyle(el).fontSize); var guard=0; while((el.scrollWidth>maxW||el.scrollHeight>maxH)&&size>28&&guard<80){ size*=0.94; el.style.fontSize=size+"px"; guard++; } }
 
     var artifact=document.getElementById("artifact"), kwEl=document.getElementById("keyword"), capEl=document.getElementById("caption"), pill=document.getElementById("statusPill"), accEl=document.getElementById("accession");
@@ -112,7 +112,7 @@
     function tick(){
       var now=Date.now();
       if(featuredEntry && now<featuredUntil){
-        render({keyword:featuredEntry.keyword,caption:donorCaption(featuredEntry)},"feature");
+        render({keyword:featuredEntry.keyword,caption:FRESH_CAPTION},"feature");
         progress.style.width=Math.min(100,(1-(featuredUntil-now)/FEATURE_MS)*100)+"%"; progress.style.background="var(--blue)"; return;
       }
       if(featuredEntry){ featuredEntry=null; buildQueue(); slotStartedAt=0; }
